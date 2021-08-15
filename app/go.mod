@@ -1,4 +1,4 @@
-module github.com/carolynvs/tabby-cat-demo/app
+module github.com/carolynvs/tabbycat-demo/app
 
 go 1.16
 

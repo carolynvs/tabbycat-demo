@@ -1,11 +1,11 @@
-# Default values for tabby-cat-demo.
+# Default values for tabbycat-demo.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: carolynvs/tabby-cat-demo-app
+  repository: carolynvs/tabbycat-demo-app
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -46,11 +46,11 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: tabby-cats-demo.local
+    - host: tabbycats-demo.local
       paths:
       - path: /
         backend:
-          serviceName: tabby-cats-demo.local
+          serviceName: tabbycats-demo.local
           servicePort: 80
   tls: []
   #  - secretName: chart-example-tls

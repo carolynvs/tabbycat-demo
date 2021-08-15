@@ -1,4 +1,4 @@
-name: tabby-cat-demo
+name: tabbycat-demo
 version: 0.1.0
 description: "Demo bundle that deploys TabbyCat to Azure"
 registry: carolynvs
@@ -53,7 +53,7 @@ install:
   - terraform:
       description: "Create infrastructure"
       vars:
-        resource-group: "tabby-cat-demo-{{ installation.name}}"
+        resource-group: "tabbycat-demo-{{ installation.name}}"
         location: "{{ bundle.parameters.location }}"
   # TODO: call helm install
 

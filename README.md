@@ -1,4 +1,4 @@
-# Tabby Cat Demo
+# TabbyCat Demo
 
 This repository demonstrates how to distribute a cloud-native application using Porter.
 

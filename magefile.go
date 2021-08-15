@@ -9,6 +9,11 @@ import (
 	"github.com/carolynvs/magex/shx"
 )
 
+const (
+	version = "0.1.0"
+	img     = "carolynvs/tabbycat-demo-app:v" + version
+)
+
 var must = shx.CommandBuilder{StopOnError: true}
 
 // Ensure mage is installed and on the PATH
@@ -17,10 +22,15 @@ func EnsureMage() error {
 }
 
 // Build the docker image
-func BuildImage() error {
-	return shx.RunV("docker", "build", "-t=carolynvs/tabby-cat-demo-app:v0.1.0", "-f=app/Dockerfile", "app")
+func BuildImage() {
+	must.RunV("docker", "build", "-t="+img, "-f=app/Dockerfile", "app")
 }
 
-func Bundle() error {
-	return shx.RunV("porter", "build", "--debug")
+func Bundle() {
+	must.RunV("porter", "build", "--version", version)
+}
+
+func Publish() {
+	must.RunV("docker", "push", img)
+	must.RunV("porter", "publish")
 }

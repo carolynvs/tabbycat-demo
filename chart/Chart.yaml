@@ -1,6 +1,6 @@
 apiVersion: v2
-name: tabby-cat-demo
-description: Installs the tabby-cat-demo
+name: tabbycat-demo
+description: Installs the tabbycat-demo
 
 # A chart can be either an 'application' or a 'library' chart.
 #
