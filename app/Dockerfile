@@ -1,6 +1,5 @@
 # syntax=docker/dockerfile:1
 FROM golang:1.16
-WORKDIR /go/src/tabby-cat-demo
 
 WORKDIR /src
 ENV CGO_ENABLED=0

@@ -1,0 +1,70 @@
+name: tabby-cat-demo
+version: 0.1.0
+description: "Demo bundle that deploys TabbyCat to Azure"
+registry: carolynvs
+
+mixins:
+  - exec
+  - helm
+  - terraform:
+      clientVersion: 1.0.4
+
+credentials:
+  - name: subscription
+    description: Azure subscription id
+    env: ARM_SUBSCRIPTION_ID
+  - name: tenant
+    description: Azure service principal tenant id
+    env: ARM_TENANT_ID
+  - name: client
+    description: Azure service principal client id
+    env: ARM_CLIENT_ID
+  - name: client-secret
+    description: Azure service principal client secret
+    env: ARM_CLIENT_SECRET
+
+parameters:
+  - name: location
+    description: Azure location for the db
+    type: string
+    default: centralus
+    applyTo:
+      - install
+  - name: tfstate
+    type: file
+    path: /cnab/app/terraform/terraform.tfstate
+    source:
+      output: tfstate
+  - name: tfvars
+    type: file
+    path: /cnab/app/terraform/terraform.tfvars.json
+    source:
+      output: tfvars
+
+outputs:
+  - name: tfstate
+    type: file
+    path: /cnab/app/terraform/terraform.tfstate
+  - name: tfvars
+    type: file
+    path: /cnab/app/terraform/terraform.tfvars.json
+
+install:
+  - terraform:
+      description: "Create infrastructure"
+      vars:
+        resource-group: "tabby-cat-demo-{{ installation.name}}"
+        location: "{{ bundle.parameters.location }}"
+  # TODO: call helm install
+
+upgrade:
+  # TODO: call helm upgrade
+  - exec:
+      description: "World 2.0"
+      command: ./helpers.sh
+      arguments:
+        - upgrade
+
+uninstall:
+  - terraform:
+      description: "Destroy infrastructure"
