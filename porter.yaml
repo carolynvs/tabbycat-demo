@@ -48,22 +48,30 @@ outputs:
   - name: tfvars
     type: file
     path: /cnab/app/terraform/terraform.tfvars.json
+  - name: static_ip
+  - name: kubeconfig
+  - name: cluster_certificate
 
 install:
   - terraform:
       description: "Create infrastructure"
       vars:
-        resource-group: "tabbycat-demo-{{ installation.name}}"
+        installation: "{{ installation.name}}"
         location: "{{ bundle.parameters.location }}"
+      outputs:
+        - name: static_ip
+        - name: kubeconfig
+        - name: cluster_certificate
   # TODO: call helm install
 
 upgrade:
+  - terraform:
+      description: "Update infrastructure"
+      outputs:
+        - name: static_ip
+        - name: kubeconfig
+        - name: cluster_certificate
   # TODO: call helm upgrade
-  - exec:
-      description: "World 2.0"
-      command: ./helpers.sh
-      arguments:
-        - upgrade
 
 uninstall:
   - terraform:

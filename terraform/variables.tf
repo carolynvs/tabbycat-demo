@@ -1,9 +1,9 @@
-variable "location" {
-  description = "Azure location"
+variable "installation" {
+  description = "Name of the bundle installation"
   type        = string
 }
 
-variable "resource-group" {
-  description = "Azure resource group name"
+variable "location" {
+  description = "Azure location"
   type        = string
 }
