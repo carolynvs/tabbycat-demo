@@ -1,13 +1,17 @@
 name: tabbycat-demo
 version: 0.1.0
 description: "Demo bundle that deploys TabbyCat to Azure"
-registry: carolynvs
+registry: "localhost:5000/carolynvs"
+
+custom:
+  appVersion: 0.1.0
 
 mixins:
   - exec
-  - helm
+  - helm3
   - terraform:
       clientVersion: 1.0.4
+      initFile: providers.tf
 
 credentials:
   - name: subscription
@@ -30,6 +34,11 @@ parameters:
     default: centralus
     applyTo:
       - install
+  - name: kubeconfig
+    type: string
+    path: /root/.kube/config
+    source:
+      output: kubeconfig
   - name: tfstate
     type: file
     path: /cnab/app/terraform/terraform.tfstate
@@ -49,8 +58,17 @@ outputs:
     type: file
     path: /cnab/app/terraform/terraform.tfvars.json
   - name: static_ip
+    type: string
+    applyTo:
+      - install
   - name: kubeconfig
+    type: string
+    applyTo:
+      - install
   - name: cluster_certificate
+    type: string
+    applyTo:
+      - install
 
 install:
   - terraform:
@@ -62,16 +80,29 @@ install:
         - name: static_ip
         - name: kubeconfig
         - name: cluster_certificate
-  # TODO: call helm install
+  - exec:
+      command: ./helpers.sh
+      arguments:
+        - save-kubeconfig
+        - "{{ bundle.outputs.kubeconfig }}"
+  - helm3:
+      description: "Install myapp"
+      name: "{{ installation.name }}"
+      chart: ./chart
+      version: "{{ bundle.custom.appVersion }}"
+      upsert: true
+      set:
+        connStr: "{{ bundle.outputs.static_ip }}"
 
 upgrade:
-  - terraform:
-      description: "Update infrastructure"
-      outputs:
-        - name: static_ip
-        - name: kubeconfig
-        - name: cluster_certificate
-  # TODO: call helm upgrade
+  - helm3:
+      description: "Install myapp"
+      name: "{{ installation.name }}"
+      chart: ./chart
+      version: "{{ bundle.custom.appVersion }}"
+      upsert: true
+      set:
+        connStr: "{{ bundle.outputs.static_ip }}"
 
 uninstall:
   - terraform:

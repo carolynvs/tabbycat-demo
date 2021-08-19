@@ -27,7 +27,7 @@ func BuildImage() {
 }
 
 func Bundle() {
-	must.RunV("porter", "build", "--version", version)
+	must.RunV("porter", "build", "--version", version, "--debug", "--verbose")
 }
 
 func Publish() {
