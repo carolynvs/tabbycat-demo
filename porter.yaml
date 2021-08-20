@@ -32,13 +32,15 @@ parameters:
     description: Azure location for the db
     type: string
     default: centralus
-    applyTo:
-      - install
   - name: kubeconfig
     type: string
     path: /root/.kube/config
     source:
       output: kubeconfig
+  - name: connstr
+    type: string
+    source:
+      output: connstr
   - name: tfstate
     type: file
     path: /cnab/app/terraform/terraform.tfstate
@@ -61,14 +63,17 @@ outputs:
     type: string
     applyTo:
       - install
+      - upgrade
   - name: kubeconfig
     type: string
     applyTo:
       - install
-  - name: cluster_certificate
+      - upgrade
+  - name: connstr
     type: string
     applyTo:
       - install
+      - upgrade
 
 install:
   - terraform:
@@ -79,7 +84,7 @@ install:
       outputs:
         - name: static_ip
         - name: kubeconfig
-        - name: cluster_certificate
+        - name: connstr
   - exec:
       command: ./helpers.sh
       arguments:
@@ -92,9 +97,23 @@ install:
       version: "{{ bundle.custom.appVersion }}"
       upsert: true
       set:
-        connStr: "{{ bundle.outputs.static_ip }}"
+        connStr: "{{ bundle.outputs.connstr }}"
 
 upgrade:
+  - terraform:
+      description: "Create infrastructure"
+      vars:
+        installation: "{{ installation.name}}"
+        location: "{{ bundle.parameters.location }}"
+      outputs:
+        - name: static_ip
+        - name: kubeconfig
+        - name: connstr
+  - exec:
+      command: ./helpers.sh
+      arguments:
+        - save-kubeconfig
+        - "{{ bundle.outputs.kubeconfig }}"
   - helm3:
       description: "Install myapp"
       name: "{{ installation.name }}"
@@ -102,7 +121,7 @@ upgrade:
       version: "{{ bundle.custom.appVersion }}"
       upsert: true
       set:
-        connStr: "{{ bundle.outputs.static_ip }}"
+        connStr: "{{ bundle.outputs.connstr }}"
 
 uninstall:
   - terraform:
