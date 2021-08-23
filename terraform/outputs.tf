@@ -1,3 +1,7 @@
+output "resource_group" {
+  value = azurerm_resource_group.group.name
+}
+
 output "static_ip" {
   value = azurerm_public_ip.ip.ip_address
 }
@@ -8,6 +12,6 @@ output "kubeconfig" {
 }
 
 output "connstr" {
-  value = azurerm_cosmosdb_account.db.connection_strings
+  value = azurerm_cosmosdb_account.db.connection_strings[0]
   sensitive = true
 }

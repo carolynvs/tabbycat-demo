@@ -2,10 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "tabbycat-demo.fullname" . }}
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.resourceGroup }}
   labels:
     {{- include "tabbycat-demo.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  loadBalancerIP: {{ .Values.staticIP }}
+  type: LoadBalancer
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http

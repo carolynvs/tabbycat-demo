@@ -1,3 +1,6 @@
+data "azurerm_client_config" "current" {
+}
+
 resource "azurerm_resource_group" "group" {
   name     = var.installation
   location = var.location
@@ -25,6 +28,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   identity {
     type = "SystemAssigned"
   }
+}
+
+// Allow aks to use our static ip
+resource "azurerm_role_assignment" "aks-loadbalancer" {
+  scope                = azurerm_resource_group.group.id
+  role_definition_name = "Network Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "random_integer" "rand" {
@@ -66,4 +76,9 @@ resource "azurerm_cosmosdb_mongo_collection" "db_bookmarks" {
   resource_group_name = azurerm_resource_group.group.name
   account_name        = azurerm_cosmosdb_account.db.name
   database_name       = azurerm_cosmosdb_mongo_database.db.name
+
+  index {
+    keys = ["_id"]
+    unique = true
+  }
 }

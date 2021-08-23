@@ -3,6 +3,8 @@
 # Declare variables to be passed into your templates.
 
 connStr: ""
+staticIP: ""
+resourceGroup: ""
 
 replicaCount: 1
 

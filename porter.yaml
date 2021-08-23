@@ -70,14 +70,11 @@ install:
         installation: "{{ installation.name}}"
         location: "{{ bundle.parameters.location }}"
       outputs:
+        - name: resource_group
         - name: static_ip
-        - name: kubeconfig
         - name: connstr
-  - exec:
-      command: ./helpers.sh
-      arguments:
-        - save-kubeconfig
-        - "{{ bundle.outputs.kubeconfig }}"
+        - name: kubeconfig
+          destinationFile: /root/.kube/config
   - helm3:
       description: "Install myapp"
       name: "{{ installation.name }}"
@@ -86,6 +83,8 @@ install:
       upsert: true
       set:
         connStr: "{{ bundle.outputs.connstr }}"
+        staticIP: "{{ bundle.outputs.static_ip }}"
+        resourceGroup: "{{ bundle.outputs.resource_group }}"
 
 upgrade:
   - helm3:
