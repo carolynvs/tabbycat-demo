@@ -7,7 +7,6 @@ custom:
   appVersion: 0.1.0
 
 mixins:
-  - exec
   - helm3
   - terraform:
       clientVersion: 1.0.4
@@ -41,39 +40,28 @@ parameters:
     type: string
     source:
       output: connstr
-  - name: tfstate
-    type: file
-    path: /cnab/app/terraform/terraform.tfstate
-    source:
-      output: tfstate
-  - name: tfvars
-    type: file
-    path: /cnab/app/terraform/terraform.tfvars.json
-    source:
-      output: tfvars
+    applyTo:
+      - upgrade
 
 outputs:
-  - name: tfstate
-    type: file
-    path: /cnab/app/terraform/terraform.tfstate
-  - name: tfvars
-    type: file
-    path: /cnab/app/terraform/terraform.tfvars.json
   - name: static_ip
     type: string
     applyTo:
       - install
-      - upgrade
   - name: kubeconfig
     type: string
     applyTo:
       - install
-      - upgrade
   - name: connstr
     type: string
     applyTo:
       - install
-      - upgrade
+
+state:
+  - name: tfstate
+    path: terraform/terraform.tfstate
+  - name: tfvars
+    path: terraform/terraform.tfvars.json
 
 install:
   - terraform:
@@ -100,22 +88,8 @@ install:
         connStr: "{{ bundle.outputs.connstr }}"
 
 upgrade:
-  - terraform:
-      description: "Create infrastructure"
-      vars:
-        installation: "{{ installation.name}}"
-        location: "{{ bundle.parameters.location }}"
-      outputs:
-        - name: static_ip
-        - name: kubeconfig
-        - name: connstr
-  - exec:
-      command: ./helpers.sh
-      arguments:
-        - save-kubeconfig
-        - "{{ bundle.outputs.kubeconfig }}"
   - helm3:
-      description: "Install myapp"
+      description: "Upgrade myapp"
       name: "{{ installation.name }}"
       chart: ./chart
       version: "{{ bundle.custom.appVersion }}"

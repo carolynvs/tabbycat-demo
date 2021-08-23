@@ -38,7 +38,7 @@ resource "azurerm_cosmosdb_account" "db" {
   location            = var.location
   offer_type          = "Standard"
   kind                = "MongoDB"
-  
+
   capabilities {
     name = "EnableMongo"
   }

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 save-kubeconfig() {
+  mkdir /root/.kube
   echo $1 > /root/.kube/config
 }
 
