@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 connStr: ""
-staticIP: ""
 resourceGroup: ""
 
 replicaCount: 1
@@ -41,7 +40,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 80
 
 ingress:

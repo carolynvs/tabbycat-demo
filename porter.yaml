@@ -1,10 +1,10 @@
 name: tabbycat-demo
-version: 0.1.0
+version: 0.2.0
 description: "Demo bundle that deploys TabbyCat to Azure"
 registry: "localhost:5000/carolynvs"
 
 custom:
-  appVersion: 0.1.0
+  appVersion: 0.2.0
 
 mixins:
   - helm3
@@ -44,8 +44,8 @@ parameters:
       - upgrade
 
 outputs:
-  - name: static_ip
-    description: Static IP address assigned to the app's endpoint
+  - name: endpoint
+    description: TabbyCats Tracker endpoint
     type: string
     applyTo:
       - install
@@ -74,7 +74,6 @@ install:
         location: "{{ bundle.parameters.location }}"
       outputs:
         - name: resource_group
-        - name: static_ip
         - name: connstr
         - name: kubeconfig
           destinationFile: /root/.kube/config
@@ -86,8 +85,12 @@ install:
       upsert: true
       set:
         connStr: "{{ bundle.outputs.connstr }}"
-        staticIP: "{{ bundle.outputs.static_ip }}"
         resourceGroup: "{{ bundle.outputs.resource_group }}"
+      outputs:
+        - name: endpoint
+          resourceType: service
+          resourceName: "{{ installation.name}}-tabbycat-demo"
+          jsonPath: "{.status.loadBalancer.ingress[0].ip}"
 
 upgrade:
   - helm3:

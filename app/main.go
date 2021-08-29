@@ -38,7 +38,10 @@ func renderList(w io.Writer) error {
 		Favorites []Favorite
 	}{
 		Favorites: []Favorite{
-			{Name: "Snuggly Doombringer", URL: "http://tabbycats.club/cat/jvzpqs"},
+			{URL: "http://tabbycats.club/cat/jvzpqs"},
+			{URL: "https://tabbycats.club/cat/a637t5"},
+			{URL: "https://tabbycats.club/cat/w4266a"},
+			{URL: "https://tabbycats.club/cat/01ujg2"},
 		},
 	}
 	return tmpl.ExecuteTemplate(w, "list.html", data)

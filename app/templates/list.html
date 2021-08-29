@@ -8,16 +8,35 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
-    <title>My Favorite Tabs</title>
+    <style type="text/css">
+        h1 {
+            text-align: center;
+        }
+        .cats {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            margin-left: auto;
+            margin-right: auto;
+            width: 1000px;
+        }
+        .cat {
+            width: 400px;
+            height: 400px;
+            margin: 10px 5px;
+        }
+    </style>
+    <title>TabbyCats Tracker</title>
 </head>
 <body>
-<h1>My Favorite Tabs</h1>
+<h1>TabbyCats Tracker</h1>
 
-<ul>
+<div class="cats">
     {{range .Favorites}}
-    <li><a href="{{.URL}}">{{.Name}}</a></li>
+    <iframe src="{{.URL}}" class="cat"></iframe>
     {{end}}
-</ul>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 

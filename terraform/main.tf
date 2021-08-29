@@ -6,13 +6,6 @@ resource "azurerm_resource_group" "group" {
   location = var.location
 }
 
-resource "azurerm_public_ip" "ip" {
-  name                = var.installation
-  resource_group_name = azurerm_resource_group.group.name
-  location            = azurerm_resource_group.group.location
-  allocation_method   = "Static"
-}
-
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.installation
   location            = azurerm_resource_group.group.location
@@ -28,13 +21,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   identity {
     type = "SystemAssigned"
   }
-}
-
-// Allow aks to use our static ip
-resource "azurerm_role_assignment" "aks-loadbalancer" {
-  scope                = azurerm_resource_group.group.id
-  role_definition_name = "Network Contributor"
-  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "random_integer" "rand" {
