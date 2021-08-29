@@ -8,10 +8,8 @@ resourceGroup: ""
 replicaCount: 1
 
 image:
-  repository: carolynvs/tabbycat-demo-app
+  reference: "carolynvs/tabbycat-demo-app:v0.2.0"
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
