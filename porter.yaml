@@ -45,14 +45,17 @@ parameters:
 
 outputs:
   - name: static_ip
+    description: Static IP address assigned to the app's endpoint
     type: string
     applyTo:
       - install
   - name: kubeconfig
+    description: Kubeconfig for the cluster
     type: string
     applyTo:
       - install
   - name: connstr
+    description: Connection string for the database
     type: string
     applyTo:
       - install
