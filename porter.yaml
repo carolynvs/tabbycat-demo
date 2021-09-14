@@ -1,7 +1,7 @@
 name: tabbycat-demo
 version: 0.2.0
 description: "Demo bundle that deploys TabbyCat to Azure"
-registry: "localhost:5000/carolynvs"
+registry: "carolynvs"
 
 custom:
   appVersion: 0.2.0
@@ -52,11 +52,13 @@ outputs:
   - name: kubeconfig
     description: Kubeconfig for the cluster
     type: string
+    sensitive: true
     applyTo:
       - install
   - name: connstr
     description: Connection string for the database
     type: string
+    sensitive: true
     applyTo:
       - install
 
@@ -73,7 +75,6 @@ install:
         installation: "{{ installation.name}}"
         location: "{{ bundle.parameters.location }}"
       outputs:
-        - name: resource_group
         - name: connstr
         - name: kubeconfig
           destinationFile: /root/.kube/config
@@ -83,6 +84,7 @@ install:
       chart: ./chart
       version: "{{ bundle.custom.appVersion }}"
       upsert: true
+      wait: true
       set:
         connStr: "{{ bundle.outputs.connstr }}"
         image.reference: "{{ bundle.images.tabbycat.repository }}@{{ bundle.images.tabbycat.digest }}"
