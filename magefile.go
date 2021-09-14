@@ -5,12 +5,13 @@
 package main
 
 import (
+	"github.com/magefile/mage/mg"
 	"github.com/carolynvs/magex/pkg"
 	"github.com/carolynvs/magex/shx"
 )
 
 const (
-	version = "0.2.0"
+	version = "0.2.1"
 	img     = "carolynvs/tabbycat-demo-app:v" + version
 )
 
@@ -31,6 +32,13 @@ func Bundle() {
 }
 
 func Publish() {
+	mg.SerialDeps(PublishImage, PublishBundle)
+}
+
+func PublishImage() {
 	must.RunV("docker", "push", img)
+}
+
+func PublishBundle() {
 	must.RunV("porter", "publish")
 }
